@@ -1,6 +1,6 @@
 [submodule "azure-c-shared-utility"]
 	path = c-utility
-	url = https://github.com/Azure/azure-c-shared-utility.git
+	url = https://github.com/twilio/azure-c-shared-utility.git
 [submodule "azure-umqtt-c"]
 	path = umqtt
 	url = https://github.com/Azure/azure-umqtt-c.git
@@ -12,7 +12,7 @@
 	url = https://github.com/kgabis/parson.git
 [submodule "deps/uhttp"]
 	path = deps/uhttp
-	url = https://github.com/Azure/azure-uhttp-c.git
+	url = https://github.com/twilio/azure-uhttp-c.git
 [submodule "provisioning_client/deps/RIoT"]
 	path = provisioning_client/deps/RIoT
 	url = https://github.com/Microsoft/RIoT.git
