@@ -12,6 +12,7 @@
 #include "azure_c_shared_utility/xlogging.h"
 #include "azure_c_shared_utility/crt_abstractions.h"
 #include "azure_c_shared_utility/hmacsha256.h"
+#include "azure_c_shared_utility/tlsio_cryptodev.h"
 
 #include "azure_prov_client/internal/iothub_auth_client.h"
 #include "azure_prov_client/iothub_security_factory.h"
@@ -32,6 +33,7 @@ typedef struct IOTHUB_SECURITY_INFO_TAG
 
     HSM_CLIENT_GET_CERTIFICATE hsm_client_get_cert;
     HSM_CLIENT_GET_ALIAS_KEY hsm_client_get_alias_key;
+    HSM_CLIENT_GET_CRYPTODEV_KEY hsm_client_get_cryptodev_key;
 
     HSM_CLIENT_GET_TRUST_BUNDLE hsm_client_get_trust_bundle;
     HSM_CLIENT_GET_SYMMETRICAL_KEY hsm_client_get_symm_key;
@@ -40,6 +42,7 @@ typedef struct IOTHUB_SECURITY_INFO_TAG
     char* sas_token;
     char* x509_certificate;
     char* x509_alias_key;
+    TLSIO_CRYPTODEV_PKEY* x509_cryptodev_key;
     bool base64_encode_signature;
     bool urlencode_token_scope;
 } IOTHUB_SECURITY_INFO;
@@ -169,7 +172,8 @@ IOTHUB_SECURITY_HANDLE iothub_device_auth_create()
                 ((result->hsm_client_create = x509_interface->hsm_client_x509_create) == NULL) ||
                 ((result->hsm_client_destroy = x509_interface->hsm_client_x509_destroy) == NULL) ||
                 ((result->hsm_client_get_cert = x509_interface->hsm_client_get_cert) == NULL) ||
-                ((result->hsm_client_get_alias_key = x509_interface->hsm_client_get_key) == NULL)
+                ((result->hsm_client_get_alias_key = x509_interface->hsm_client_get_key) == NULL) ||
+                ((result->hsm_client_get_cryptodev_key = x509_interface->hsm_client_get_cryptodev_key) == NULL)
                 )
             {
                 /* Codes_IOTHUB_DEV_AUTH_07_034: [ if any of the iothub_security_interface function are NULL iothub_device_auth_create shall return NULL. ] */
@@ -271,6 +275,7 @@ void iothub_device_auth_destroy(IOTHUB_SECURITY_HANDLE handle)
         /* Codes_IOTHUB_DEV_AUTH_07_005: [ iothub_device_auth_destroy shall call the concrete_iothub_device_auth_destroy function associated with the XDA_INTERFACE_DESCRIPTION. ] */
         free(handle->x509_certificate);
         free(handle->x509_alias_key);
+        free(handle->x509_cryptodev_key);
         free(handle->sas_token);
         handle->hsm_client_destroy(handle->hsm_client_handle);
         /* Codes_IOTHUB_DEV_AUTH_07_004: [ iothub_device_auth_destroy shall free all resources associated with the IOTHUB_SECURITY_HANDLE handle ] */
@@ -479,18 +484,27 @@ CREDENTIAL_RESULT* iothub_device_auth_generate_credentials(IOTHUB_SECURITY_HANDL
                 free(handle->x509_alias_key);
                 handle->x509_alias_key = NULL;
             }
+            if (handle->x509_cryptodev_key != NULL)
+            {
+                free(handle->x509_cryptodev_key);
+                handle->x509_cryptodev_key = NULL;
+            }
+
+            handle->x509_certificate = handle->hsm_client_get_cert(handle->hsm_client_handle);
+            handle->x509_alias_key = handle->hsm_client_get_alias_key(handle->hsm_client_handle);
+	    handle->x509_cryptodev_key = handle->hsm_client_get_cryptodev_key(handle->hsm_client_handle);
 
             if ((result = malloc(sizeof(CREDENTIAL_RESULT))) == NULL)
             {
                 LogError("Failure allocating credential result.");
             }
-            else if ((handle->x509_certificate = handle->hsm_client_get_cert(handle->hsm_client_handle)) == NULL)
+            else if (handle->x509_certificate == NULL)
             {
                 LogError("Failure allocating device credential result.");
                 free(result);
                 result = NULL;
             }
-            else if ((handle->x509_alias_key = handle->hsm_client_get_alias_key(handle->hsm_client_handle)) == NULL)
+            else if ((handle->x509_alias_key == NULL) && (handle->x509_cryptodev_key == NULL))
             {
                 LogError("Failure allocating device credential result.");
                 free(handle->x509_certificate);
@@ -502,6 +516,7 @@ CREDENTIAL_RESULT* iothub_device_auth_generate_credentials(IOTHUB_SECURITY_HANDL
             {
                 result->auth_cred_result.x509_result.x509_cert = handle->x509_certificate;
                 result->auth_cred_result.x509_result.x509_alias_key = handle->x509_alias_key;
+                result->auth_cred_result.x509_result.x509_cryptodev_key = handle->x509_cryptodev_key;
             }
         }
     }

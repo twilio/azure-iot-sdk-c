@@ -275,11 +275,19 @@ int IoTHubClient_Auth_Set_xio_Certificate(IOTHUB_AUTHORIZATION_HANDLE handle, XI
                 LogError("Failure setting x509 cert on xio");
                 result = MU_FAILURE;
             }
-            else if (xio_setoption(xio, OPTION_X509_ECC_KEY, cred_result->auth_cred_result.x509_result.x509_alias_key) != 0)
+            else if ((cred_result->auth_cred_result.x509_result.x509_alias_key != NULL) &&
+                     (xio_setoption(xio, OPTION_X509_ECC_KEY, cred_result->auth_cred_result.x509_result.x509_alias_key) != 0))
             {
                 LogError("Failure setting x509 key on xio");
                 result = MU_FAILURE;
             }
+            else if ((cred_result->auth_cred_result.x509_result.x509_cryptodev_key != NULL) &&
+                     (xio_setoption(xio, SU_OPTION_X509_CRYPTODEV_PRIVATE_KEY, cred_result->auth_cred_result.x509_result.x509_cryptodev_key) != 0))
+            {
+                LogError("Failure setting x509 cryptodev key on xio");
+                result = MU_FAILURE;
+            }
+
             else
             {
                 result = 0;
