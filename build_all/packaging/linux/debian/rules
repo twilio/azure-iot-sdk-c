@@ -22,7 +22,7 @@ include /usr/share/dpkg/default.mk
 	dh $@ --buildsystem=cmake --DSYSINSTALL_BINDINGS=ON
 
 override_dh_auto_configure:
-	dh_auto_configure --
+	dh_auto_configure -- -Duse_openssl:bool=ON -Duse_prov_client=ON -Dbuild_provisioning_service_client=ON -Ddont_use_uploadtoblob=ON ..
 
 override_dh_auto_install:
 	rm -f -r $$(pwd)/debian/tmp
@@ -33,5 +33,5 @@ override_dh_auto_install:
 	mkdir $$(pwd)/debian/tmp/usr/include/azureiot
 	cp $$(pwd)/obj-*/iothub_client/*.a $$(pwd)/debian/tmp/usr/lib/
 	cp $$(pwd)/obj-*/serializer/*.a $$(pwd)/debian/tmp/usr/lib/
-	cp $$(pwd)/iothub_client/inc/* $$(pwd)/debian/tmp/usr/include/azureiot
+	cp -r $$(pwd)/iothub_client/inc/* $$(pwd)/debian/tmp/usr/include/azureiot
 	cp $$(pwd)/serializer/inc/* $$(pwd)/debian/tmp/usr/include/azureiot
