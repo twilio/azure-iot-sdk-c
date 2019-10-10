@@ -1,1 +1,5 @@
 usr/include/azureiot/*
+usr/include/azure_macro_utils/*
+usr/include/azure_prov_client/*
+usr/include/iothub_service_client/*
+usr/include/umock_c/*
