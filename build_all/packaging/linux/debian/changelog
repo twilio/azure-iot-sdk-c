@@ -1,0 +1,5 @@
+azure-iot-sdk-c-twilio (1.0.0.1buster) buster; urgency=low
+
+  * See https://github.com/Azure/azure-iot-sdk-c/releases for details of the release
+
+ -- AzureIoT User <agerasimov@twilio.com>  Tue, 27 Sep 2016 11:00:00 +0000
