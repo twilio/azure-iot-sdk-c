@@ -24,7 +24,9 @@ fi
 
 pushd ./raspbian-deb-builder
 
-DEBS=$(./cross-build.sh ${dist} azure-iot-sdk-c:${TRAVIS_TAG}:${VERSION})
+echo "Starting building azure-iot-sdk-c packages for Raspbian ${dist}"
+DEBS=$(./cross-build.sh ${dist} azure-iot-sdk-c:${TRAVIS_TAG}:${VERSION} 2>../build.log)
+echo "Done building azure-iot-sdk-c packages for Raspbian ${dist}"
 
 popd
 
@@ -38,12 +40,18 @@ NUM_DEV_DEBS=$(ls -1q debs_to_deploy_${dist}/azure-iot-sdk-c-twilio-dev* | wc -l
 if [ ${NUM_LIB_DEBS} -ne 1 ]; then
 	echo "Exactly one lib debian file for ${dist} expected"
 	ls -1q debs_to_deploy_${dist}/*
+
+	echo "Build log: "
+	cat build.log
 	exit 1
 fi
 
 if [ ${NUM_DEV_DEBS} -ne 1 ]; then
 	echo "Exactly one dev debian file for ${dist} expected"
 	ls -1q debs_to_deploy_${dist}/*
+
+	echo "Build log: "
+	cat build.log
 	exit 1
 fi
 
