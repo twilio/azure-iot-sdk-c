@@ -14,35 +14,48 @@ else
 	exit 1
 fi
 
-mkdir -p debs_to_deploy
-git clone https://github.com/oytis/raspbian-deb-builder
+dist=${1}
+
+mkdir -p debs_to_deploy_${dist}
+
+if [ ! -d raspbian-deb-builder ]; then
+	git clone https://github.com/oytis/raspbian-deb-builder
+fi
 
 pushd ./raspbian-deb-builder
 
-DEBS=$(./cross-build.sh buster azure-iot-sdk-c:${TRAVIS_TAG}:${VERSION})
+echo "Starting building azure-iot-sdk-c packages for Raspbian ${dist}"
+DEBS=$(./cross-build.sh ${dist} azure-iot-sdk-c:${TRAVIS_TAG}:${VERSION} 2>../build.log)
+echo "Done building azure-iot-sdk-c packages for Raspbian ${dist}"
 
 popd
 
 for d in ${DEBS}; do
-	mv ${d} debs_to_deploy
+	mv ${d} debs_to_deploy_${dist}
 done
 
-NUM_LIB_DEBS=$(ls -1q debs_to_deploy/azure-iot-sdk-c-twilio-lib* | wc -l)
-NUM_DEV_DEBS=$(ls -1q debs_to_deploy/azure-iot-sdk-c-twilio-dev* | wc -l)
+NUM_LIB_DEBS=$(ls -1q debs_to_deploy_${dist}/azure-iot-sdk-c-twilio-lib* | wc -l)
+NUM_DEV_DEBS=$(ls -1q debs_to_deploy_${dist}/azure-iot-sdk-c-twilio-dev* | wc -l)
 
 if [ ${NUM_LIB_DEBS} -ne 1 ]; then
-	echo "Exactly one lib debian file expected"
-	ls -1q debs_to_deploy/*
+	echo "Exactly one lib debian file for ${dist} expected"
+	ls -1q debs_to_deploy_${dist}/*
+
+	echo "Build log: "
+	cat build.log
 	exit 1
 fi
 
 if [ ${NUM_DEV_DEBS} -ne 1 ]; then
-	echo "Exactly one dev debian file expected"
-	ls -1q debs_to_deploy/*
+	echo "Exactly one dev debian file for ${dist} expected"
+	ls -1q debs_to_deploy_${dist}/*
+
+	echo "Build log: "
+	cat build.log
 	exit 1
 fi
 
-cat >deploy-lib.json <<EOF
+cat >deploy-${dist}-lib.json <<EOF
 {
   "package": {
     "name":"azure-iot-sdk-c-twilio-lib",
@@ -59,9 +72,9 @@ cat >deploy-lib.json <<EOF
   },
 
   "files":
-    [{"includePattern": "debs_to_deploy/(azure-iot-sdk-c-twilio-lib.*\.deb)", "uploadPattern": "pool/main/m/azure-iot-sdk-c-twilio-lib/\$1",
+    [{"includePattern": "debs_to_deploy_${dist}/(azure-iot-sdk-c-twilio-lib.*\.deb)", "uploadPattern": "pool/main/m/azure-iot-sdk-c-twilio-lib/\$1",
       "matrixParams": {
-        "deb_distribution": "buster",
+        "deb_distribution": "${dist}",
         "deb_component": "main",
         "deb_architecture": "armhf"}
     }],
@@ -69,7 +82,7 @@ cat >deploy-lib.json <<EOF
 }
 EOF
 
-cat >deploy-dev.json <<EOF
+cat >deploy-${dist}-dev.json <<EOF
 {
   "package": {
     "name":"azure-iot-sdk-c-twilio-dev",
@@ -86,9 +99,9 @@ cat >deploy-dev.json <<EOF
   },
 
   "files":
-    [{"includePattern": "debs_to_deploy/(azure-iot-sdk-c-twilio-dev.*\.deb)", "uploadPattern": "pool/main/m/azure-iot-sdk-c-twilio-dev/\$1",
+    [{"includePattern": "debs_to_deploy_${dist}/(azure-iot-sdk-c-twilio-dev.*\.deb)", "uploadPattern": "pool/main/m/azure-iot-sdk-c-twilio-dev/\$1",
       "matrixParams": {
-        "deb_distribution": "buster",
+        "deb_distribution": "${dist}",
         "deb_component": "main",
         "deb_architecture": "armhf"}
     }],
