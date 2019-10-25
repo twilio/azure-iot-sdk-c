@@ -23,3 +23,10 @@ include /usr/share/dpkg/default.mk
 
 override_dh_auto_configure:
 	dh_auto_configure -- -Duse_openssl=ON -Duse_prov_client=ON -Dbuild_provisioning_service_client=ON -Ddont_use_uploadtoblob=ON ..
+
+override_dh_auto_install:
+	dh_auto_install -- prefix=/usr
+	mv $$(pwd)/debian/tmp/usr/include/azureiot/azure_c_shared_utility $$(pwd)/debian/tmp/usr/include
+	mv $$(pwd)/debian/tmp/usr/include/azureiot/azure_uamqp_c $$(pwd)/debian/tmp/usr/include
+	mv $$(pwd)/debian/tmp/usr/include/azureiot/azure_uhttp_c $$(pwd)/debian/tmp/usr/include
+	mv $$(pwd)/debian/tmp/usr/include/azureiot/azure_umqtt_c $$(pwd)/debian/tmp/usr/include
