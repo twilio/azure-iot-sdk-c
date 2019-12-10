@@ -25,7 +25,7 @@ fi
 pushd ./raspbian-deb-builder
 
 echo "Starting building azure-iot-sdk-c packages for Raspbian ${dist}"
-DEBS=$(./cross-build.sh ${dist} azure-iot-sdk-c:${TRAVIS_TAG}:${VERSION} 2>../build.log)
+DEBS=$(./cross-build.sh ${dist} azure-iot-sdk-c:${TRAVIS_TAG}:${VERSION} 2>../build.log || true)
 echo "Done building azure-iot-sdk-c packages for Raspbian ${dist}"
 
 popd

@@ -1,16 +1,13 @@
 Source: azure-iot-sdk-c-twilio
 Priority: optional
-Maintainer: Azure User <aziotsdklinux@outlook.com>
-#Build-Depends: debhelper (>= 9), cmake (>= 2.8), libssl-dev, libcurl4-openssl-dev, curl, azure-c-shared-util-twilio-dev, azure-uamqp-c-twilio-dev, azure-umqtt-c-twilio-dev
-Build-Depends: debhelper (>= 9), cmake (>= 2.8), libssl-dev, libcurl4-openssl-dev, curl
+Maintainer: Anton Gerasimov <agerasimov@twilio.com>
 Standards-Version: 3.9.6
 Section: libs
-Homepage: https://github.com/Azure/azure-iot-sdk-c.git
+Homepage: https://github.com/twilio/azure-iot-sdk-c.git
 
 Package: azure-iot-sdk-c-twilio-dev
 Section: libdevel
 Architecture: any
-#Depends: azure-iot-sdk-c-twilio-lib (= ${binary:Version}), ${misc:Depends}, libssl-dev, libcurl4-openssl-dev, curl, azure-c-shared-util-twilio-dev, azure-uamqp-c-twilio-dev, azure-umqtt-c-twilio-dev
 Depends: azure-iot-sdk-c-twilio-lib (= ${binary:Version}), ${misc:Depends}, libssl-dev, libcurl4-openssl-dev, curl
 Description: Microsoft Azure IoT device SDK for C Library, Twilio edition.
  The Microsoft Azure IoT device libraries for C contain code that
@@ -20,7 +17,6 @@ Description: Microsoft Azure IoT device SDK for C Library, Twilio edition.
 
 Package: azure-iot-sdk-c-twilio-lib
 Architecture: any
-#Depends: ${shlibs:Depends}, ${misc:Depends}, libssl-dev, libcurl4-openssl-dev, curl, azure-c-shared-util-twilio-dev, azure-uamqp-c-twilio-dev, azure-umqtt-c-twilio-dev
 Depends: ${shlibs:Depends}, ${misc:Depends}, libssl-dev, libcurl4-openssl-dev, curl
 Description: Microsoft Azure IoT device SDK for C Library
  The Microsoft Azure IoT device libraries for C contain code that
