@@ -6,7 +6,7 @@ os:
 - linux
 env:
   global:
-  - secure: gCWeHvAJJQw/FoOEl618GAnsrX5H4fYWLQR31RGQlq5BypjTjMJYczx+NeGKZHv959uE4jYAlWh57BKgrquEN04oQx19NM1B+k6SCQWjoz7eOks3to5pcOSvadbQFBtf9MKlubvstqozfKZM/s9ugpRZBPameWCd624cIbM1NPhRLWrmXQQlHnGiLYFZgVTisQvjZ9OXIQ3YGX4zzAkpE7SqFgPNJo+xh7Hnhhr9CwB/JWPY5aVbhzuyCGozQu//MBpRSFU/FFs/lAgf997jfOSq3R/78nPOcxEMaEqaaFdKPOkydlKa6GHLUvPLWfJ1nG1NlpzSIkHHXQhO7E/qwbMX++/gRQd9Yv97sQLEJmc2+C7RXy3LY04yPoy+hcGLdOyXizr2+eJYuW47JNNhS8u3PYWhTFw3FMCKyl0Wq0P/dI3MXlQgHY+rpGnj3nWzEoa0ydR75gn2f+sKk+8AyZFyW2BV84i9sFLruqxJOncGSJaRJq0CqaeTN90EPfMagYU/I+esZ5jUuEcrzpLgU8Gu3/YmhaRejumCQ9fw5vS+nVx8iMqMTtwEJ7A95em0/FLqD5SxsaDoKGsAugoP5L3zGw8RR4SZcwfJoCM0SlJg3D9FHjmV7OrwntXj5eu31RPPlW7IV//BuJ3F6R78iESyi9bO4vd+hyZaNfMszQ8=
+  - secure: "eDWE6wktyKQJtN4yoMnDune31jtu4NuUos2FAVra0/oRGksHOwDtyPfrEmm7Q6dGWXGDsXwKbi3ETLxlge5wUaFSKUs8kiSEGZ1Z6cXiVfVyM8LxSxx9CGhC6gATnDJAgQKTtF/UbJqH8B8wk/h/S2K1Xjg0nClDZXizDr1ERsD9pGIbXmqAySNP4bBAQooKwCndOCx9CjK7GsQA7YtyTugJ/9jp3F06T1WFNZKakjzoMIr3r4tTabFbb2tvhG7mmMMIRnDhv+NOMSfxiqfWaSn080NSnHpcWQ6uStPMBC4aLmPyyJVn8IwCU7/FpLuGIC3ebe7Fv4/3W0P6u/1fPCF06q0MtZ+SSI6FE3iCUDDUCY7/CNbRPmbZ7oYT0ZrQbHUs3pYY4pZJ1SxIZ8l9Sg2u4SiAvwq+4veVFCO6oFey1a4raXnb4VWhhSwj8d7mHetOjb1DOaoagsxHjIqm1A1JHj2cUOMMqIzMvkiLGImpLV6FjrIxhRsIlyVjruIqvy8EbIqSt4EfsFn/lKgBjnsKfieks81FSLG6ziMRBUIkDDgLaOUT2rgYgMlULvTXGDCgx5PpVBf+obOkTHfDq1DCc+koxq7vGpXaQ9d5teGffjQzdblgyoRzXNYblhspfJb8LgVvpatsgo2I3NvfP+gMEMU0kR9/zL/VPaIm1zw="
 before_install:
 - sudo apt-get update
 script:
@@ -18,26 +18,26 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-  user: agerasimov@twilio
+  user: agerasimov1@twilio
   key: "${BINTRAY_TOKEN}"
 - provider: bintray
   file: deploy-buster-dev.json
   skip_cleanup: true
   on:
     tags: true
-  user: agerasimov@twilio
+  user: agerasimov1@twilio
   key: "${BINTRAY_TOKEN}"
 - provider: bintray
   file: deploy-stretch-lib.json
   skip_cleanup: true
   on:
     tags: true
-  user: agerasimov@twilio
+  user: agerasimov1@twilio
   key: "${BINTRAY_TOKEN}"
 - provider: bintray
   file: deploy-stretch-dev.json
   skip_cleanup: true
   on:
     tags: true
-  user: agerasimov@twilio
+  user: agerasimov1@twilio
   key: "${BINTRAY_TOKEN}"
